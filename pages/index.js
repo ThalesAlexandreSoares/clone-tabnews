@@ -3,21 +3,31 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [text, setText] = useState("");
   const [subText, setSubText] = useState("");
+  const [showTatalinho, setShowTatalinho] = useState(false);
 
   const fullText = "Boa prova, gostosa.";
   const fullSubText = "Tião! 🩵";
 
-  // Efeito de digitação para o título
-  useEffect(() => {
+  // Função para iniciar o efeito de digitação
+  const startTyping = () => {
+    setText("");
+    setSubText("");
     let index = 0;
+
     const interval = setInterval(() => {
       setText(fullText.slice(0, index));
       index++;
+
+      // Quando finalizar a frase principal
       if (index > fullText.length) {
         clearInterval(interval);
-        startSubtitle();
+
+        // Adiciona um delay de 80ms antes de começar a próxima linha
+        setTimeout(() => {
+          startSubtitle();
+        }, 80); // delay depois de terminar o texto principal
       }
-    }, 100);
+    }, 80);
 
     const startSubtitle = () => {
       let subIndex = 0;
@@ -27,14 +37,53 @@ export default function Home() {
         if (subIndex > fullSubText.length) {
           clearInterval(subInterval);
         }
-      }, 100);
+      }, 150);
     };
-  }, []);
+  };
+
+  // Loop no efeito de digitação
+  useEffect(() => {
+    if (!showTatalinho) {
+      startTyping();
+
+      const loop = setInterval(() => {
+        startTyping();
+      }, 5000); // reinicia o typing a cada 5 segundos
+
+      return () => clearInterval(loop);
+    }
+  }, [showTatalinho]);
+
+  // Botão "Clique aqui! 👉👈"
+  const handleClick = () => {
+    setShowTatalinho(true);
+    setText("");
+    setSubText("");
+  };
+
+  // Botão "Voltar"
+  const handleVoltar = () => {
+    setShowTatalinho(false);
+  };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>{text}</h1>
-      <h2 style={styles.subtitle}>{subText}</h2>
+      {!showTatalinho ? (
+        <>
+          <h1 style={styles.title}>{text}</h1>
+          <h2 style={styles.subtitle}>{subText}</h2>
+          <button onClick={handleClick} style={styles.button}>
+            Clique aqui! 👉👈
+          </button>
+        </>
+      ) : (
+        <>
+          <h1 style={styles.tatalinho}>Beijos do Tatalinho!! 😘</h1>
+          <button onClick={handleVoltar} style={styles.voltarButton}>
+            Voltar 🔙
+          </button>
+        </>
+      )}
     </div>
   );
 }
@@ -50,6 +99,7 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     color: "#333",
     textAlign: "center",
+    padding: "20px",
   },
   title: {
     fontSize: "48px",
@@ -64,5 +114,37 @@ const styles = {
     color: "#333",
     textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
     transition: "all 0.5s ease-in-out",
+  },
+  button: {
+    marginTop: "40px",
+    padding: "15px 30px",
+    fontSize: "20px",
+    fontWeight: "bold",
+    backgroundColor: "#FFB6C1",
+    color: "#fff",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+    transition: "background-color 0.3s ease",
+  },
+  voltarButton: {
+    marginTop: "30px",
+    padding: "12px 25px",
+    fontSize: "18px",
+    fontWeight: "bold",
+    backgroundColor: "#87CEFA",
+    color: "#fff",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+    transition: "background-color 0.3s ease",
+  },
+  tatalinho: {
+    fontSize: "48px",
+    fontWeight: "bold",
+    color: "#FF69B4",
+    textShadow: "2px 2px 10px rgba(0,0,0,0.3)",
   },
 };
