@@ -1,5 +1,5 @@
 function Home() {
-  return <h1>Eu te amo. Me responde com um 🩵 se funcionou, por favor. 😘</h1>;
+  return <h1>Boa prova, gostosa. Tião! 🩵</h1>;
 }
 
 export default Home;
