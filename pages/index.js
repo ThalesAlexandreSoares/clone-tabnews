@@ -5,8 +5,8 @@ export default function Home() {
   const [subText, setSubText] = useState("");
   const [showTatalinho, setShowTatalinho] = useState(false);
 
-  const fullText = "Boa prova, gostosa.";
-  const fullSubText = "Tião! 🩵";
+  const fullText = "Saudades de você, pô. 😔";
+  const fullSubText = "Tião... 🩵";
 
   // Função para iniciar o efeito de digitação
   const startTyping = () => {
@@ -78,7 +78,9 @@ export default function Home() {
         </>
       ) : (
         <>
-          <h1 style={styles.tatalinho}>Beijos do Tatalinho!! 😘</h1>
+          <h1 style={styles.tatalinho}>
+            Dia 30. (E São João em Itaberaba. 🌽🔥) 😘
+          </h1>
           <button onClick={handleVoltar} style={styles.voltarButton}>
             Voltar 🔙
           </button>
