@@ -1,89 +1,77 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [text, setText] = useState("");
-  const [subText, setSubText] = useState("");
-  const [showTatalinho, setShowTatalinho] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({});
+  const [showMessage, setShowMessage] = useState(false);
 
-  const fullText = "Saudades de você, pô. 😔";
-  const fullSubText = "Tião... 🩵";
-
-  // Função para iniciar o efeito de digitação
-  const startTyping = () => {
-    setText("");
-    setSubText("");
-    let index = 0;
-
-    const interval = setInterval(() => {
-      setText(fullText.slice(0, index));
-      index++;
-
-      // Quando finalizar a frase principal
-      if (index > fullText.length) {
-        clearInterval(interval);
-
-        // Adiciona um delay de 80ms antes de começar a próxima linha
-        setTimeout(() => {
-          startSubtitle();
-        }, 80); // delay depois de terminar o texto principal
-      }
-    }, 80);
-
-    const startSubtitle = () => {
-      let subIndex = 0;
-      const subInterval = setInterval(() => {
-        setSubText(fullSubText.slice(0, subIndex));
-        subIndex++;
-        if (subIndex > fullSubText.length) {
-          clearInterval(subInterval);
-        }
-      }, 150);
-    };
-  };
-
-  // Loop no efeito de digitação
   useEffect(() => {
-    if (!showTatalinho) {
-      startTyping();
+    const targetDate = new Date("2025-06-20T00:00:00");
 
-      const loop = setInterval(() => {
-        startTyping();
-      }, 5000); // reinicia o typing a cada 5 segundos
+    const updateCountdown = () => {
+      const now = new Date();
+      const difference = targetDate - now;
 
-      return () => clearInterval(loop);
-    }
-  }, [showTatalinho]);
+      if (difference <= 0) {
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        });
+        return;
+      }
 
-  // Botão "Clique aqui! 👉👈"
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / (1000 * 60)) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const handleClick = () => {
-    setShowTatalinho(true);
-    setText("");
-    setSubText("");
+    setShowMessage(true);
   };
 
-  // Botão "Voltar"
-  const handleVoltar = () => {
-    setShowTatalinho(false);
+  const handleBack = () => {
+    setShowMessage(false);
   };
 
   return (
     <div style={styles.container}>
-      {!showTatalinho ? (
+      <div style={styles.overlay}></div>
+
+      <h1 style={styles.title}>🎉🌽 São João de Itaberaba 🤠🎉</h1>
+
+      {!showMessage ? (
         <>
-          <h1 style={styles.title}>{text}</h1>
-          <h2 style={styles.subtitle}>{subText}</h2>
-          <button onClick={handleClick} style={styles.button}>
-            Clique aqui! 👉👈
-          </button>
+          <div style={styles.countdownBox}>
+            <p style={styles.countdownText}>Faltam:</p>
+            <p style={styles.time}>
+              {timeLeft.days} dias, {timeLeft.hours} horas, {timeLeft.minutes}{" "}
+              minutos e {timeLeft.seconds} segundos
+            </p>
+          </div>
+          <div style={styles.buttonWrapper}>
+            <button style={styles.button} onClick={handleClick}>
+              Clique aqui! 👉👈
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h1 style={styles.tatalinho}>
-            Dia 30. (E São João em Itaberaba. 🌽🔥) 😘
-          </h1>
-          <button onClick={handleVoltar} style={styles.voltarButton}>
-            Voltar 🔙
-          </button>
+          <div style={styles.messageBox}>
+            <p style={styles.message}>Beijos do Tatalinho!! 😘</p>
+            <button style={styles.button} onClick={handleBack}>
+              Voltar
+            </button>
+          </div>
         </>
       )}
     </div>
@@ -92,61 +80,85 @@ export default function Home() {
 
 const styles = {
   container: {
-    height: "100vh",
-    background: "linear-gradient(135deg, #FFDEE9, #B5FFFC)",
+    position: "relative",
+    minHeight: "100vh",
+    padding: "2rem",
+    color: "#fff",
+    fontFamily: "Arial, sans-serif",
+    textAlign: "center",
+    backgroundImage:
+      'url("https://www.itaberabanoticias.com.br/wp-content/uploads/2025/03/WhatsApp-Image-2025-03-22-at-9.18.13-PM.jpeg")',
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Arial, sans-serif",
-    color: "#333",
-    textAlign: "center",
-    padding: "20px",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 0,
   },
   title: {
-    fontSize: "48px",
-    fontWeight: "bold",
-    margin: "0",
-    textShadow: "1px 1px 5px rgba(0,0,0,0.2)",
-    transition: "all 0.5s ease-in-out",
+    fontSize: "3rem",
+    marginBottom: "2rem",
+    color: "#FFD700",
+    textShadow: "2px 2px 8px #000",
+    zIndex: 1,
   },
-  subtitle: {
-    fontSize: "32px",
-    marginTop: "20px",
+  countdownBox: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: "12px",
+    padding: "2rem",
+    display: "inline-block",
+    marginBottom: "1.5rem",
+    zIndex: 1,
+  },
+  countdownText: {
+    fontSize: "1.7rem",
+    marginBottom: "1rem",
     color: "#333",
-    textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
-    transition: "all 0.5s ease-in-out",
+  },
+  time: {
+    fontSize: "1.4rem",
+    color: "#FF4500",
+  },
+  buttonWrapper: {
+    zIndex: 1,
   },
   button: {
-    marginTop: "40px",
-    padding: "15px 30px",
-    fontSize: "20px",
-    fontWeight: "bold",
-    backgroundColor: "#FFB6C1",
-    color: "#fff",
-    border: "none",
+    padding: "0.85rem 2rem",
+    fontSize: "1.2rem",
     borderRadius: "10px",
-    cursor: "pointer",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-    transition: "background-color 0.3s ease",
-  },
-  voltarButton: {
-    marginTop: "30px",
-    padding: "12px 25px",
-    fontSize: "18px",
-    fontWeight: "bold",
-    backgroundColor: "#87CEFA",
-    color: "#fff",
     border: "none",
-    borderRadius: "10px",
+    backgroundColor: "#FF4500",
+    color: "#FFF",
     cursor: "pointer",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-    transition: "background-color 0.3s ease",
+    boxShadow: "3px 3px 15px rgba(0,0,0,0.3)",
+    transition: "all 0.3s ease",
   },
-  tatalinho: {
-    fontSize: "48px",
-    fontWeight: "bold",
-    color: "#FF69B4",
-    textShadow: "2px 2px 10px rgba(0,0,0,0.3)",
+  messageBox: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    padding: "2rem",
+    borderRadius: "12px",
+    display: "inline-block",
+    zIndex: 1,
   },
+  message: {
+    fontSize: "1.7rem",
+    marginBottom: "1rem",
+    color: "#333",
+  },
+};
+
+// Adicione isso no final para efeito hover do botão:
+styles.button[":hover"] = {
+  backgroundColor: "#FF6347",
+  transform: "scale(1.05)",
 };
