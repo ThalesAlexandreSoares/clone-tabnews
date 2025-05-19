@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BAGACEIRA - Meta AI & JIMO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff4757;
+      --secondary: #2f3542;
+      --bg: #1e272e;
+      --text: #f1f2f6;
+      --highlight: #ffa502;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: radial-gradient(circle at 75% 25%, rgba(255, 71, 87, 0.1) 0%, transparent 50%);
+      overflow-x: hidden;
+    }
+
+    .logo-container {
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+
+    .logo {
+      max-width: 250px; /* Tamanho reduzido */
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 15px rgba(255, 71, 87, 0.7));
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin: 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(to right, var(--primary), var(--highlight));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin: 0 0 30px;
+      max-width: 600px;
+      padding: 0 20px;
+      opacity: 0.9;
+      font-style: italic;
+      color: var(--highlight);
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .countdown-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 71, 87, 0.6);
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: rgba(47, 53, 66, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 20px 15px;
+      border-radius: 12px;
+      min-width: 100px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .countdown-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .countdown-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .countdown-label {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .video-container {
+      display: none;
+      max-width: 300px;
+      margin: 20px auto;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--highlight));
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .event-ended {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite;
+      margin: 20px 0;
+      display: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        max-width: 200px;
+      }
+      .countdown-container {
+        flex-direction: column;
+      }
+      .countdown {
+        gap: 10px;
+      }
+      .countdown-item {
+        min-width: 80px;
+        padding: 15px 10px;
+      }
+      .countdown-value {
+        font-size: 2rem;
+      }
+      .button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="sao-joao-2025.png" alt="SÃO JOÃO -2025- META A1 & JIMO" class="logo">
+  </div>
+  
+  <h1>BAGACEIRA - Meta AI & JIMO</h1>
+  <p class="subtitle">Só é São João se Lucas pegar mulher feia ou levar um fora</p>
+  
+  <div class="countdown-container">    
+    <!-- Contador -->
+    <div class="countdown" id="countdown">
+      <div class="countdown-item">
+        <div class="countdown-value" id="days">00</div>
+        <div class="countdown-label">Dias</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-value" id="hours">00</div>
+        <div class="countdown-label">Horas</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-value" id="minutes">00</div>
+        <div class="countdown-label">Minutos</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-value" id="seconds">00</div>
+        <div class="countdown-label">Segundos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+<div>
+  <a href="https://itaberaba.ba.gov.br/2025/03/23/prefeitura-de-itaberaba-divulga-atracoes-do-sao-joao-2025/" class="button" target="_blank">CONSULTAR GRADE</a>
+</div>
+
+
+  <div id="event-ended" class="event-ended">CHEGOU A HORA!</div>
+
+  <script>
+    const targetDate = new Date("2025-06-20T00:00:00").getTime();
+    const totalDuration = targetDate - new Date("2024-06-20T00:00:00").getTime();
+
+    // Função do contador
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      // Barra de progresso
+      const progress = 100 - (distance / totalDuration) * 100;
+      document.getElementById("progress-bar").style.width = `${Math.min(progress, 100)}%`;
+
+      if (distance < 0) {
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("event-ended").style.display = "block";
+        document.getElementById("progress-bar").style.width = "100%";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("days").innerText = String(days).padStart(2, '0');
+      document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+      document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+      document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
